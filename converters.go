@@ -1,6 +1,8 @@
 package main
 
-import "strconv"
+import (
+	"strconv"
+)
 
 func toBinary(number uint32) string {
 	return strconv.FormatInt(int64(number), 2)

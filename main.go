@@ -8,28 +8,32 @@ import (
 	"strconv"
 )
 
-// functionalities:
-
-// base2 -> base10
-// base10 -> base2
-
-// nt -b (binary number)
-// nt (default base10 signed number)
-// nt -u (base10 unsigned number)
-
 func main() {
 
 	number := parseArgToInt()
 	un := uint32(number)
-	bi := toBinary(un)
-	bih := toHumanReadBinary(un)
-	hex := toHex(un)
+
+	bi := make(chan string)
+	bih := make(chan string)
+	hex := make(chan string)
+
+	go func() {
+		bi <- toBinary(un)
+	}()
+
+	go func() {
+		bih <- toHumanReadBinary(un)
+	}()
+
+	go func() {
+		hex <- toHex(un)
+	}()
 
 	fmt.Printf("(signed) %d\n", number)
 	fmt.Printf("(unsigned) %d\n", un)
-	fmt.Printf("(binary) 0b%s\n", bi)
-	fmt.Printf("(binary) %s\n", bih)
-	fmt.Printf("(unsigned) 0x%s\n", hex)
+	fmt.Printf("(binary) 0b%s\n", <-bi)
+	fmt.Printf("(binary) %s\n", <-bih)
+	fmt.Printf("(unsigned) 0x%s\n", <-hex)
 
 }
 
@@ -64,33 +68,29 @@ func parseArgToInt() int32 {
 		}
 	} else if prefix == "0x" {
 		// hex
+		inputNumber = inputNumber[2:]
 		number, err = strconv.ParseInt(inputNumber, 16, 64)
 		if err != nil {
 			log.Fatalf("%s is not a valid hex number", inputNumber)
 		}
 	} else {
-		// base10
-		// unsign
-		const MaxUint = ^uint(0)
-		const MinUint = 0
-		const MaxInt = int(MaxUint >> 1)
-		const MinInt = -MaxInt - 1
-
+		// other
 		number, err = strconv.ParseInt(inputNumber, 10, 64)
 		if err != nil {
-			log.Fatalf("not support %s", inputNumber)
+			log.Fatalf("%s is not a valid digital number", inputNumber)
 		}
 		if number <= math.MaxInt32 && number >= math.MinInt32 {
+			// int32 value
 			return int32(number)
 		} else if number > math.MaxInt32 && number <= math.MaxUint32 {
+			// uint32 value
 			var ui uint64
-			ui, err = strconv.ParseUint(inputNumber, 10, 64)
-			if err != nil {
-				log.Fatalf("%s is not a valid unsign int", inputNumber)
-			}
+			ui, _ = strconv.ParseUint(inputNumber, 10, 64)
 			number = int64(ui)
+		} else if number > math.MaxUint32 || number < math.MinInt32 {
+			log.Fatalf("%s is too big or too small(for int32).", inputNumber)
 		} else {
-			log.Fatalf("not support %s", inputNumber)
+			log.Fatalf("Cannot regconize %s.", inputNumber)
 		}
 	}
 	return int32(number)
