@@ -33,7 +33,7 @@ func main() {
 	fmt.Printf("(unsigned) %d\n", un)
 	fmt.Printf("(binary) 0b%s\n", <-bi)
 	fmt.Printf("(binary) %s\n", <-bih)
-	fmt.Printf("(unsigned) 0x%s\n", <-hex)
+	fmt.Printf("(hex) 0x%s\n", <-hex)
 
 }
 
