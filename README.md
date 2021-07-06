@@ -27,7 +27,7 @@ go build *.go
 (unsigned) 16
 (binary) 0b10000
 (binary) 0000 0000 0000 0000 0000 0000 0001 0000
-(unsigned) 0x10
+(hex) 0x10
 ```
 
 ### Example 2.
@@ -39,7 +39,7 @@ go build *.go
 (unsigned) 4294967293
 (binary) 0b11111111111111111111111111111101
 (binary) 1111 1111 1111 1111 1111 1111 1111 1101
-(unsigned) 0xfffffffd
+(hex) 0xfffffffd
 
 ```
 
@@ -52,7 +52,7 @@ go build *.go
 (unsigned) 2722
 (binary) 0b101010100010
 (binary) 0000 0000 0000 0000 0000 1010 1010 0010
-(unsigned) 0xaa2
+(hex) 0xaa2
 ```
 
 ### Example 4.
